@@ -1,7 +1,7 @@
 <template>
-  <div class="about">
-    <Slider v-model="value" range />
-  </div>
+<div>
+      <Button>Default</Button>
+</div>
 </template>
 <script>
     export default {

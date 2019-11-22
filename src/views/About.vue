@@ -1,13 +1,14 @@
 <template>
 <div>
-      <Button>Default</Button>
+    <i-switch v-model="switch1"/>
+    <Button>Default</Button>
 </div>
 </template>
 <script>
     export default {
         data () {
             return {
-                value: [20, 50]
+                switch1: false
             }
         }
     }

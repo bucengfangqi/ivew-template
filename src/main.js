@@ -5,6 +5,7 @@ import store from './store'
 
 import "./plugins/axios";
 import "./plugins/iview";
+import "./plugins/api";
 Vue.config.productionTip = false
 
 new Vue({

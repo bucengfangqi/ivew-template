@@ -12,7 +12,13 @@ export default new Vuex.Store({
       area: null, // 业务区域
       date: [null, null], // 业务提交时间
       signedStatus: null, // 合同状态
-      sourcename: null // 业务来源
+      sourcename: null, // 业务来源
+      // 分页
+      page: {
+        pageNumber: 2,
+        pageSize: 10,
+        recordCount:0,
+      }
     }
   },
   mutations: {},

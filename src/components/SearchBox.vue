@@ -1,5 +1,5 @@
 <template>
-  <Form ref="searchCondition" :model="searchCondition" :label-position="'top'" :inline="true">
+  <Form ref="searchCondition" :model="searchCondition" :label-position="'top'" :inline="true" :disabled="loading">
     <FormItem label="业务ID" prop="id">
       <InputNumber style="width: 90px" :max="9999999" :min="1" v-model="searchCondition.id" placeholder="例：001" @on-change="getTable"></InputNumber>
     </FormItem>
@@ -44,42 +44,47 @@
     <FormItem label="操作">
       <Button type="primary" @click="handleReset">清空查询条件</Button>
     </FormItem>
-    <br>
-    <pre>
-      {{searchCondition}}
-    </pre>
   </Form>
 </template>
 <script>
-import { interval } from "rxjs";
-import { take,debounceTime } from "rxjs/operators";
+import { Subject } from "rxjs";
+import { debounceTime } from "rxjs/operators";
 export default {
   name: "SearchBox",
+  props: {
+    loading: Boolean
+  },
   data() {
-    return {};
+    return {
+      formChange: new Subject()
+    };
   },
   mounted() {
-    interval(1000)
-      .pipe(
-        take(4),
-        debounceTime(2000)
-      )
-      .subscribe(res => {
-        console.log(res);
-      });
+    this.formChange.pipe(debounceTime(500)).subscribe(() => {
+      this.$emit("get-table");
+    });
+  },
+  beforeDestroy() {
+    this.formChange.unsubscribe();
   },
   methods: {
+    // 表单变更
+    getTable(value) {
+      this.formChange.next(value);
+    },
     // 重置表单
     handleReset() {
       // 由于表单存在缓存，无法使用 iview 所提供的的初始化方法
       this.$store.state.searchCondition = {
         id: null,
-        date: ["", ""]
+        date: ["", ""],
+        page: {
+          pageNumber: 1,
+          pageSize: this.searchCondition.page.pageSize,
+          recordCount: this.searchCondition.page.recordCount
+        }
       };
       this.getTable();
-    },
-    getTable() {
-      console.log("查询表格");
     }
   },
   computed: {

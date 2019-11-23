@@ -1,6 +1,7 @@
 import Vue from "vue";
 import "../theme/index.less";
 import {
+  Message,
   Button,
   Table,
   Switch,
@@ -15,8 +16,9 @@ import {
   InputNumber,
   DatePicker,
   Select,
-  Option
+  Option,
 } from "view-design";
+Vue.prototype.$Message = Message;
 
 Vue.component("Button", Button);
 Vue.component("Table", Table);

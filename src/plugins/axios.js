@@ -1,16 +1,13 @@
 import Vue from "vue";
 
 import axios from "axios";
+axios.defaults.headers.common["AccessToken"] = "zPkxjWJtTc6bQoUMGmAygA";
 Vue.prototype.$http = axios;
 
 // Add a request interceptor
 axios.interceptors.request.use(
   function(config) {
     // Do something before request is sent
-    config.headers = {
-      Accept: "application/json, text/plain, */*",
-      AccessToken: "zPkxjWJtTc6bQoUMGmAygA"
-    };
     return config;
   },
   function(error) {

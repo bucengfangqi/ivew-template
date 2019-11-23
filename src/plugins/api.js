@@ -1,16 +1,13 @@
 import Vue from "vue";
 import axios from "axios";
-
+import Qs from "qs";
 Vue.prototype.$api = {
   getBussList() {
-    return axios.get("/static/json/list.json", {
-      params: {
-        firstName: "Fred",
-        lastName: "Flintstone"
-      },
-      paramsSerializer: function(params) {
-        return Qs.stringify(params, { arrayFormat: "brackets" });
-      }
-    });
+    return axios.post(
+      "/static/json/list.json",
+      Qs.stringify({
+        bar: 123
+      })
+    );
   }
 };

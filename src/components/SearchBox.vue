@@ -51,24 +51,35 @@
   </Form>
 </template>
 <script>
+import { interval } from "rxjs";
+import { take,debounceTime } from "rxjs/operators";
 export default {
   name: "SearchBox",
   data() {
     return {};
   },
-  mounted() {},
+  mounted() {
+    interval(1000)
+      .pipe(
+        take(4),
+        debounceTime(2000)
+      )
+      .subscribe(res => {
+        console.log(res);
+      });
+  },
   methods: {
     // 重置表单
     handleReset() {
       // 由于表单存在缓存，无法使用 iview 所提供的的初始化方法
-      this.$store.state.searchCondition={
-        id:null,
-        date: ['', ''],
+      this.$store.state.searchCondition = {
+        id: null,
+        date: ["", ""]
       };
       this.getTable();
     },
-    getTable(){
-      console.log('查询表格');
+    getTable() {
+      console.log("查询表格");
     }
   },
   computed: {

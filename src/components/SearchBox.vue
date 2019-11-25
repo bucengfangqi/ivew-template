@@ -4,24 +4,20 @@
       <InputNumber style="width: 90px" :max="9999999" :min="1" v-model="searchCondition.id" placeholder="例：001" @on-change="getTable"></InputNumber>
     </FormItem>
     <FormItem label="业务分类" prop="menuid">
-      <Select v-model="searchCondition.menuid" :clearable="true" @on-change="getTable">
-        <Option value="1">啦啦啦</Option>
-        <Option value="2">London</Option>
-        <Option value="3">Sydney</Option>
+      <Select v-model="searchCondition.menuid" :clearable="true" @on-change="getTable" filterable>
+        <Option v-for="busMenu in busMenus" :key="busMenu.menuname+busMenu.id" :value="busMenu.id">{{busMenu.menuname}}</Option>
       </Select>
     </FormItem>
-    <FormItem label="单据状态" prop="status">
+    <FormItem label="业务状态" prop="status">
       <Select v-model="searchCondition.status" :clearable="true" @on-change="getTable">
-        <Option value="beijing">New York</Option>
-        <Option value="shanghai">London</Option>
-        <Option value="shenzhen">Sydney</Option>
+        <template v-for="item in dictionaries">
+          <Option :key="item.itemvalue" :value="item.itemname" v-if="item.classcode==='BUS_STATUS'">{{item.itemvalue}}</Option>
+        </template>
       </Select>
     </FormItem>
-    <FormItem label="业务区域" prop="area">
+    <FormItem label="营业区域" prop="area">
       <Select v-model="searchCondition.area" :clearable="true" @on-change="getTable">
-        <Option value="beijing">New York</Option>
-        <Option value="shanghai">London</Option>
-        <Option value="shenzhen">Sydney</Option>
+        <Option v-for="sysArea in sysAreas" :key="sysArea.code" :value="sysArea.code">{{sysArea.name}}</Option>
       </Select>
     </FormItem>
     <FormItem label="业务提交时间" prop="date">
@@ -29,16 +25,15 @@
     </FormItem>
     <FormItem label="合同状态" prop="signedStatus">
       <Select v-model="searchCondition.signedStatus" :clearable="true" @on-change="getTable">
-        <Option value="beijing">New York</Option>
-        <Option value="shanghai">London</Option>
-        <Option value="shenzhen">Sydney</Option>
+        <Option value="signed">已签署</Option>
+        <Option value="notSigned">未签署</Option>
       </Select>
     </FormItem>
     <FormItem label="业务来源" prop="sourcename">
       <Select v-model="searchCondition.sourcename" :clearable="true" @on-change="getTable">
-        <Option value="beijing">New York</Option>
-        <Option value="shanghai">London</Option>
-        <Option value="shenzhen">Sydney</Option>
+        <template v-for="item in dictionaries">
+          <Option :key="item.itemvalue" :value="item.itemname" v-if="item.classcode==='SOURCE_NAME'">{{item.itemvalue}}</Option>
+        </template>
       </Select>
     </FormItem>
     <FormItem label="操作">
@@ -52,7 +47,10 @@ import { debounceTime } from "rxjs/operators";
 export default {
   name: "SearchBox",
   props: {
-    loading: Boolean
+    loading: Boolean, // 加载状态
+    dictionaries: Array, // 来源&业务状态，字典
+    sysAreas: Array, // 业务区域列表
+    busMenus: Array, // 业务区域列表
   },
   data() {
     return {

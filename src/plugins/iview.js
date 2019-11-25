@@ -17,6 +17,14 @@ import {
   DatePicker,
   Select,
   Option,
+  Badge,
+  Icon,
+  Checkbox,
+  CheckboxGroup,
+  Radio,
+  RadioGroup,
+  Timeline,
+  TimelineItem,
 } from "view-design";
 Vue.prototype.$Message = Message;
 
@@ -35,3 +43,12 @@ Vue.component("InputNumber", InputNumber);
 Vue.component("DatePicker", DatePicker);
 Vue.component("Select", Select);
 Vue.component("Option", Option);
+Vue.component("Badge", Badge);
+Vue.component("Icon", Icon);
+Vue.component("Checkbox", Checkbox);
+Vue.component("CheckboxGroup", CheckboxGroup);
+Vue.component("Radio", Radio);
+Vue.component("RadioGroup", RadioGroup);
+Vue.component("Timeline", Timeline);
+Vue.component("TimelineItem", TimelineItem);
+

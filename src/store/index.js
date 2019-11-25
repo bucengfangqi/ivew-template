@@ -15,7 +15,7 @@ export default new Vuex.Store({
       sourcename: null, // 业务来源
       // 分页
       page: {
-        pageNumber: 2,
+        pageNumber: 1,
         pageSize: 10,
         recordCount:0,
       }

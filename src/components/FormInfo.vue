@@ -1,112 +1,81 @@
 <template>
-  <Card dis-hover :bordered="false" style="margin:30px" :padding="30">
+  <Card dis-hover :bordered="false" style="margin:30px" :padding="10">
     <p slot="title" style="color:#2d8cf0">
       <Icon type="md-list-box" :size="18"></Icon>
       用户提交的数据
     </p>
 
-    <Form :model="formItem" :label-position="'top'" :inline="true" class="form-info">
-      <FormItem class="form-item" label="Input">
-        <Input v-model="formItem.input" placeholder="Enter something..."></Input>
-      </FormItem>
-      <FormItem class="form-item" label="Select">
-        <Select v-model="formItem.select">
-            <Option value="beijing">New York</Option>
-            <Option value="shanghai">London</Option>
-            <Option value="shenzhen">Sydney</Option>
-          </Select>
-      </FormItem>
-      <FormItem class="form-item" label="DatePicker">
-       <DatePicker type="date" placeholder="Select date" v-model="formItem.date"></DatePicker>
-      </FormItem>
-      <FormItem class="form-item" label="Radio">
-        <RadioGroup v-model="formItem.radio">
-          <Radio label="male">Male</Radio>
-          <Radio label="female">Female</Radio>
-        </RadioGroup>
-      </FormItem>
-      <FormItem class="form-item" label="Checkbox">
-        <CheckboxGroup v-model="formItem.checkbox">
-          <Checkbox label="Eat"></Checkbox>
-          <Checkbox label="Sleep"></Checkbox>
-          <Checkbox label="Run"></Checkbox>
-          <Checkbox label="Movie"></Checkbox>
-        </CheckboxGroup>
-      </FormItem>
-      <FormItem class="form-item" label="Switch">
-        <i-switch v-model="formItem.switch" size="large">
-          <span slot="open">On</span>
-          <span slot="close">Off</span>
-        </i-switch>
-      </FormItem>
-      <FormItem class="form-item" label="Text">
-        <Input v-model="formItem.textarea" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
-      </FormItem>
-
-      <FormItem class="form-item" label="Input">
-        <Input v-model="formItem.input" placeholder="Enter something..."></Input>
-      </FormItem>
-      <FormItem class="form-item" label="Select">
-        <Select v-model="formItem.select">
-          <Option value="beijing">New York</Option>
-          <Option value="shanghai">London</Option>
-          <Option value="shenzhen">Sydney</Option>
-        </Select>
-      </FormItem>
-      <FormItem class="form-item" label="DatePicker">
-        <DatePicker type="date" placeholder="Select date" v-model="formItem.date"></DatePicker>
-      </FormItem>
-      <FormItem class="form-item" label="Radio">
-        <RadioGroup v-model="formItem.radio">
-          <Radio label="male">Male</Radio>
-          <Radio label="female">Female</Radio>
-        </RadioGroup>
-      </FormItem>
-      <FormItem class="form-item" label="Switch">
-        <i-switch v-model="formItem.switch" size="large">
-          <span slot="open">On</span>
-          <span slot="close">Off</span>
-        </i-switch>
-      </FormItem>
-      <FormItem class="form-item" label="Text">
-        <Input v-model="formItem.textarea" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
-      </FormItem>
+    <Form v-if="formFields&&formItem" :model="formItem" :label-position="'top'" :inline="true" class="form-info">
+      <template v-for="(field,index) in formFields">
+        <DynamicFields class="form-item" :key="field.fieldname+index" :formItem="formItem" :field="field"></DynamicFields>
+      </template>
     </Form>
-
+    <pre>
+      {{formItem}}
+    </pre>
   </Card>
 </template>
 
 <script>
+import DynamicFields from "@/components/DynamicFields.vue";
+
 export default {
+  components: {
+    DynamicFields
+  },
   name: "FormInfo",
   props: {
     forminfo: Object // 基本信息
   },
   data() {
     return {
-      formItem: {
-        input: "",
-        select: "",
-        radio: "male",
-        checkbox: [],
-        switch: true,
-        date: "",
-        textarea: ""
-      }
+      formItem: undefined,
+      // 表单列表
+      formFields: undefined
     };
+  },
+  mounted() {
+    const formItem = {};
+    this.forminfo.items.map(field => {
+      switch (field.type) {
+        case "SWITCH":
+          if (this.forminfo.content.busdata[0][field.fieldname] === "true") {
+            formItem[field.fieldname] = true;
+          } else {
+            formItem[field.fieldname] = false;
+          }
+          break;
+        case "NUMBER":
+          formItem[field.fieldname] = +this.forminfo.content.busdata[0][
+            field.fieldname
+          ];
+          break;
+        default:
+          formItem[field.fieldname] = this.forminfo.content.busdata[0][
+            field.fieldname
+          ];
+          break;
+      }
+    });
+    this.formItem = formItem;
+    console.log(formItem);
+
+    this.formFields = this.forminfo.items;
+    console.log(this.forminfo);
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.form-info{
+.form-info {
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
-  
-  .form-item{
-    width: 30%;
-		min-width: 255px;
+  margin: 20px 0;
+
+  .form-item {
+    width: 25%;
+    min-width: 295px;
+    padding: 0 20px;
   }
 }
 </style>

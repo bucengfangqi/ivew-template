@@ -19,8 +19,6 @@ import {
   Option,
   Badge,
   Icon,
-  Checkbox,
-  CheckboxGroup,
   Radio,
   RadioGroup,
   Timeline,
@@ -45,8 +43,6 @@ Vue.component("Select", Select);
 Vue.component("Option", Option);
 Vue.component("Badge", Badge);
 Vue.component("Icon", Icon);
-Vue.component("Checkbox", Checkbox);
-Vue.component("CheckboxGroup", CheckboxGroup);
 Vue.component("Radio", Radio);
 Vue.component("RadioGroup", RadioGroup);
 Vue.component("Timeline", Timeline);

@@ -28,5 +28,17 @@ Vue.prototype.$api = {
     return axios.post("/netbus/tpl/getdict", {
       classcodes: dictNameList
     });
+  },
+  // 查询表单模板配置
+  getBussOptions(templateid) {
+    return axios.post("/netbus/buss/getBussOptions", {
+      templateid
+    });
+  },
+  // 获取多人口信息
+  bussGet (templateid) {
+    return axios.post("/netbus/buss/get", {
+      id: templateid
+    });
   }
 };

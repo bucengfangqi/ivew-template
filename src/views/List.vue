@@ -28,7 +28,7 @@
       </template>
       <!-- 操作 -->
       <template slot-scope="{ row }" slot="action">
-        <Button type="primary" icon="ios-link" @click="go(row.id)">业务详情</Button>
+        <Button type="primary" icon="ios-link" @click="go(row)">业务详情</Button>
       </template>
     </Table>
     <br>
@@ -181,8 +181,11 @@ export default {
       }
     },
     // 跳转
-    go(index) {
-      this.$router.push({ path: `/list/${index}` });
+    go(row) {
+      this.$router.push({
+        path: `/list/${row.id}`,
+        query: { templateid: row.templateid }
+      });
     }
   },
   computed: {

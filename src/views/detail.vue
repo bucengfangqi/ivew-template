@@ -1,7 +1,18 @@
 <template>
   <div>
     <BasicInfo></BasicInfo>
-    <FormInfo v-if="forminfo" :forminfo="forminfo"></FormInfo>
+
+    <Card dis-hover :bordered="false" style="margin:30px" :padding="10">
+      <p slot="title" style="color:#2d8cf0">
+        <Icon type="md-list-box" :size="18"></Icon>
+        用户提交的数据
+      </p>
+      <FormInfo v-if="forminfo" :forminfo="forminfo"></FormInfo>
+      <div v-if="!forminfo" class="spin-container">
+        <Spin size="large" fix></Spin>
+      </div>
+    </Card>
+
     <FileInfo></FileInfo>
     <UserMessage></UserMessage>
     <CheckRecords></CheckRecords>
@@ -130,28 +141,26 @@ export default {
                     });
                   }
                   // 最后给动态表单赋值
-                  this.forminfo = {
-                    content: businessList.content,
-                    items: bussOptions.items
-                  };
+                  setTimeout(() => {
+                    this.forminfo = {
+                      content: businessList.content,
+                      items: bussOptions.items
+                    };
+                  }, 1000);
                 })
               );
             } else {
               // 直接给动态表单赋值
-              this.forminfo = {
-                content: businessList.content,
-                items: bussOptions.items
-              };
+              setTimeout(() => {
+                this.forminfo = {
+                  content: businessList.content,
+                  items: bussOptions.items
+                };
+              }, 1000);
             }
           }
         })
       );
-  },
-  computed: {
-    // 从缓存里面取分页数据
-    page() {
-      return this.$store.state.searchCondition.page;
-    }
   }
 };
 </script>
@@ -162,5 +171,9 @@ export default {
   bottom: 0;
   text-align: right;
   box-shadow: 0px -3px 6px 0 rgba(0, 0, 0, 0.1);
+}
+.spin-container {
+  height: 100px;
+  position: relative;
 }
 </style>

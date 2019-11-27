@@ -26,7 +26,8 @@ import {
   Upload,
   Progress,
   Modal,
-  Notice
+  Notice,
+  Spin
 } from "view-design";
 Vue.prototype.$Message = Message;
 Vue.prototype.$Notice = Notice;
@@ -55,4 +56,5 @@ Vue.component("TimelineItem", TimelineItem);
 Vue.component("Upload", Upload);
 Vue.component("Progress", Progress);
 Vue.component("Modal", Modal);
+Vue.component("Spin", Spin);
 

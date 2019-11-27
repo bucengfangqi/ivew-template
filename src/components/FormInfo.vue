@@ -1,19 +1,12 @@
 <template>
-  <Card dis-hover :bordered="false" style="margin:30px" :padding="10">
-    <p slot="title" style="color:#2d8cf0">
-      <Icon type="md-list-box" :size="18"></Icon>
-      用户提交的数据
-    </p>
-
-    <Form v-if="formFields&&formItem" :model="formItem" :label-position="'top'" :inline="true" class="form-info">
-      <template v-for="(field,index) in formFields">
-        <DynamicFields class="form-item" :key="field.fieldname+index" :formItem="formItem" :field="field"></DynamicFields>
-      </template>
-    </Form>
+  <Form v-if="formFields&&formItem" :model="formItem" :label-position="'top'" :inline="true" class="form-info">
+    <template v-for="(field,index) in formFields">
+      <DynamicFields class="form-item" :key="field.fieldname+index" :formItem="formItem" :field="field"></DynamicFields>
+    </template>
     <!-- <pre>
       {{formItem}}
     </pre> -->
-  </Card>
+  </Form>
 </template>
 
 <script>

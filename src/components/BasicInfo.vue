@@ -44,7 +44,6 @@ export default {
 <style lang="scss" scoped>
 .business-info-list{
 	display: flex;
-	justify-content: space-between;
 	flex-wrap: wrap;
 	color: #515a6e;
 	line-height: 36px;

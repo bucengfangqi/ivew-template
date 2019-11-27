@@ -10,9 +10,9 @@
         <DynamicFields class="form-item" :key="field.fieldname+index" :formItem="formItem" :field="field"></DynamicFields>
       </template>
     </Form>
-    <pre>
+    <!-- <pre>
       {{formItem}}
-    </pre>
+    </pre> -->
   </Card>
 </template>
 
@@ -58,10 +58,7 @@ export default {
       }
     });
     this.formItem = formItem;
-    console.log(formItem);
-
     this.formFields = this.forminfo.items;
-    console.log(this.forminfo);
   }
 };
 </script>

@@ -1,6 +1,6 @@
 import Vue from "vue";
 import axios from "axios";
-// import Qs from "qs";
+import Qs from "qs";
 Vue.prototype.$api = {
   // 查询业务列表
   getBussList(searchCondition) {
@@ -31,14 +31,18 @@ Vue.prototype.$api = {
   },
   // 查询表单模板配置
   getBussOptions(templateid) {
-    return axios.post("/netbus/buss/getBussOptions", {
-      templateid
-    });
+    return axios.post("/netbus/buss/getBussOptions", { templateid });
   },
   // 获取多人口信息
-  bussGet (templateid) {
-    return axios.post("/netbus/buss/get", {
-      id: templateid
-    });
+  bussGet(id) {
+    return axios.post("/netbus/buss/get", { id });
+  },
+  // 获取图片信息
+  getFilePath(busid) {
+    return axios.post("/netbus/buss/getFilePath", Qs.stringify({ busid }));
+  },
+  // 删除审核图片
+  deleteFile(bussid, ftppath, id) {
+    return axios.post("/netbus/buss/deleteFile", { bussid, ftppath, id });
   }
 };

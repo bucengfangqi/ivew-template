@@ -23,8 +23,13 @@ import {
   RadioGroup,
   Timeline,
   TimelineItem,
+  Upload,
+  Progress,
+  Modal,
+  Notice
 } from "view-design";
 Vue.prototype.$Message = Message;
+Vue.prototype.$Notice = Notice;
 
 Vue.component("Button", Button);
 Vue.component("Table", Table);
@@ -47,4 +52,7 @@ Vue.component("Radio", Radio);
 Vue.component("RadioGroup", RadioGroup);
 Vue.component("Timeline", Timeline);
 Vue.component("TimelineItem", TimelineItem);
+Vue.component("Upload", Upload);
+Vue.component("Progress", Progress);
+Vue.component("Modal", Modal);
 

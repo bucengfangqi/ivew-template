@@ -42,7 +42,11 @@ export default {
         this.$api.getBussList({
           id: this.$route.params.id,
           date: ["", ""],
-          page: this.page
+          page: {
+            pageNumber: 1,
+            pageSize: 10,
+            recordCount: 0
+          }
         }),
         this.$api.getBussOptions(this.$route.query.templateid)
       ])
@@ -55,47 +59,77 @@ export default {
             const dictNameList = new Set();
             // 默认没有多人口字段
             let hasPeople = false;
+            // 默认没有图片文件
+            let hasPictureFile = false;
             // 遍历表单配置
             bussOptions.items.map(option => {
               if (option.type === "SELECT" || option.type === "RADIO") {
                 dictNameList.add(option.typearg);
               } else if (option.type === "PEOPLE") {
                 hasPeople = true;
+              } else if (option.type === "FILE") {
+                hasPictureFile = true;
               }
             });
+            // 拼接并发请求
             if ([...dictNameList].length) {
               spreadHttps.push(this.$api.getDictionaries([...dictNameList]));
+            } else {
+              spreadHttps.push(null);
             }
             if (hasPeople) {
               spreadHttps.push(this.$api.bussGet(this.$route.params.id));
+            } else {
+              spreadHttps.push(null);
+            }
+            if (hasPictureFile) {
+              spreadHttps.push(this.$api.getFilePath(this.$route.params.id));
+            } else {
+              spreadHttps.push(null);
             }
             // 如果并发数组不为空，表单配置需要获取字典,或者获取多人口信息
             if (spreadHttps.length) {
               this.$http.all(spreadHttps).then(
-                // 此处不确定【第一个值】是哪个请求的结果
-                this.$http.spread((resultOne, resultTwo) => {
-                  bussOptions.items.map(option => {
-                    if (option.type === "SELECT" || option.type === "RADIO") {
-                      option.options = resultOne.items;
-                    } else if (option.type === "PEOPLE") {
-                      // 格式化人口列表
-                      let peopleList = [];
-                      if ([...dictNameList].length && hasPeople) {
-                        peopleList = resultTwo.mapItems.people;
-                      } else {
-                        peopleList = resultOne.mapItems.people;
+                this.$http.spread((dictionaries, peopleList, pictureFiles) => {
+                  // 如果发起了字典查询，只要后台不报错，一定要查字典
+                  if (dictionaries) {
+                    bussOptions.items.map(option => {
+                      if (option.type === "SELECT" || option.type === "RADIO") {
+                        option.options = dictionaries.items;
                       }
-                      peopleList.map(people => {
-                        people.pictureInfo = resultOne.mapItems.peoplepic.find(
-                          picture => {
-                            return picture.peopleid === people.id;
+                    });
+                  }
+                  // 如果发起了多人口信息查询，只要后台不报错，一定要查多人口信息
+                  if (peopleList) {
+                    bussOptions.items.map(option => {
+                      if (option.type === "PEOPLE") {
+                        // 格式化人口列表
+                        peopleList.mapItems.people.map(people => {
+                          people.pictureInfo = peopleList.mapItems.peoplepic.find(
+                            picture => {
+                              // 对比两个列表，如果图片的peopleid和peope的id相等
+                              return picture.peopleid === people.id;
+                            }
+                          );
+                        });
+                        option.peopleList = peopleList.mapItems.people;
+                      }
+                    });
+                  }
+                  // 如果发起了图片信息查询，只要后台不报错，一定要查图片信息
+                  if (pictureFiles) {
+                    bussOptions.items.map(option => {
+                      if (option.type === "FILE") {
+                        option.pictureFiles = [];
+                        pictureFiles.content.map(picture => {
+                          if (picture.field === option.fieldname) {
+                            option.pictureFiles.push(picture);
                           }
-                        );
-                      });
-                      option.peopleList=peopleList;
-                    }
-                  });
-                  // 再给动态表单赋值
+                        });
+                      }
+                    });
+                  }
+                  // 最后给动态表单赋值
                   this.forminfo = {
                     content: businessList.content,
                     items: bussOptions.items

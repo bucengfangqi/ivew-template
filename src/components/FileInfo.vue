@@ -1,11 +1,8 @@
 <template>
-  <Card dis-hover :bordered="false" style="margin:30px" :padding="30">
-    <p slot="title" style="color:green">
-      <Icon type="md-image" :size="18"></Icon>
-      档案信息
-    </p>
+  <div>
     <Table disabled-hover :columns="columns1" :data="data1"></Table>
-  </Card>
+    <Divider v-if="noMisinfo">无档案信息</Divider>
+  </div>
 </template>
 
 <script>
@@ -16,43 +13,32 @@ export default {
   },
   data() {
     return {
-      columns1: [
-        {
-          title: "户号",
-          key: "number"
-        },
-        {
-          title: "户名",
-          key: "name"
-        },
-        {
-          title: "用水地址",
-          key: "address"
-        },
-        {
-          title: "表身号",
-          key: "billInfo"
-        },
-        {
-          title: "抄表周期",
-          key: "period"
-        },
-        {
-          title: "用水人口",
-          key: "people"
-        }
-      ],
-      data1: [
-        {
-          number: "1234567",
-          name: '*双英',
-          address: "*墩路49号4楼",
-          billInfo: "	F14-20-21983",
-          period:"季度抄",
-          people:"0"
-        }
-      ]
+      noMisinfo: false,
+      loading: false,
+      columns1: [],
+      data1: [{}]
     };
+  },
+  mounted() {
+    if (this.fileInfo.hh) {
+      this.loading = true;
+      this.$api.getMisInfo(this.fileInfo).then(misinfo => {
+        this.loading = false;
+        const optioninfo = JSON.parse(misinfo.content.optioninfo)[0].body;
+        const hhInfo = misinfo.mapItems.WDDA[0];
+        optioninfo.map(option => {
+          this.columns1.push({
+            title: option.title,
+            key: option.value,
+            minWidth: 140
+          });
+          this.data1[0][option.value] = hhInfo[option.value];
+        });
+        console.log(optioninfo, hhInfo);
+      });
+    } else {
+      this.noMisinfo = true;
+    }
   }
 };
 </script>

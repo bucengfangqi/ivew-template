@@ -21,6 +21,7 @@ import {
   Icon,
   Radio,
   RadioGroup,
+  Time,
   Timeline,
   TimelineItem,
   Upload,
@@ -51,6 +52,7 @@ Vue.component("Badge", Badge);
 Vue.component("Icon", Icon);
 Vue.component("Radio", Radio);
 Vue.component("RadioGroup", RadioGroup);
+Vue.component("Time", Time);
 Vue.component("Timeline", Timeline);
 Vue.component("TimelineItem", TimelineItem);
 Vue.component("Upload", Upload);

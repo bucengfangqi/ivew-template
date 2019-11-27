@@ -1,32 +1,15 @@
 <template>
-  <Card dis-hover :bordered="false" style="margin:30px" :padding="30">
-    <p slot="title" style="color:#8c0776">
-      <Icon type="md-done-all" :size="18"></Icon>
-      审核记录
-    </p>
-    <Timeline>
-      <TimelineItem>
-        <p class="time">1976年</p>
-        <p class="content">Apple I 问世</p>
+  <div>
+    <template v-for="(item, index) in messageData">
+      <TimelineItem :key="index" color="blue">
+        <p class="time">
+          <Time :time="getTime(item.CREATETIME)" />
+        </p>
+        <p class="content">{{"客服-"+item.NAME+"："+item.MESSAGE}}</p>
       </TimelineItem>
-      <TimelineItem>
-        <p class="time">1984年</p>
-        <p class="content">发布 Macintosh</p>
-      </TimelineItem>
-      <TimelineItem>
-        <p class="time">2007年</p>
-        <p class="content">发布 iPhone</p>
-      </TimelineItem>
-      <TimelineItem>
-        <p class="time">2010年</p>
-        <p class="content">发布 iPad</p>
-      </TimelineItem>
-      <TimelineItem>
-        <p class="time">2011年10月5日</p>
-        <p class="content">史蒂夫·乔布斯去世</p>
-      </TimelineItem>
-    </Timeline>
-  </Card>
+    </template>
+    <Divider v-if="!messageData.length">无审核记录</Divider>
+  </div>
 </template>
 
 <script>
@@ -34,6 +17,21 @@ export default {
   name: "CheckRecords",
   props: {
     checkRecords: Object // 基本信息
+  },
+  data() {
+    return {
+      messageData: []
+    };
+  },
+  mounted() {
+    if (this.checkRecords.messageData) {
+      this.messageData = this.checkRecords.messageData.reverse();
+    }
+  },
+  methods: {
+    getTime(time) {
+      return new Date(time).getTime();
+    }
   }
 };
 </script>

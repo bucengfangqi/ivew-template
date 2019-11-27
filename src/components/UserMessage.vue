@@ -1,32 +1,18 @@
 <template>
-    <Card dis-hover :bordered="false" style="margin:30px" :padding="30">
-      <p slot="title" style="color:#444">
-        <Icon type="md-at" :size="18"></Icon>
-        用户留言
-      </p>
+  <div>
     <Timeline>
-      <TimelineItem>
-        <p class="time">1976年</p>
-        <p class="content">Apple I 问世</p>
-      </TimelineItem>
-      <TimelineItem>
-        <p class="time">1984年</p>
-        <p class="content">发布 Macintosh</p>
-      </TimelineItem>
-      <TimelineItem>
-        <p class="time">2007年</p>
-        <p class="content">发布 iPhone</p>
-      </TimelineItem>
-      <TimelineItem>
-        <p class="time">2010年</p>
-        <p class="content">发布 iPad</p>
-      </TimelineItem>
-      <TimelineItem>
-        <p class="time">2011年10月5日</p>
-        <p class="content">史蒂夫·乔布斯去世</p>
-      </TimelineItem>
+      <template v-for="(item, index) in sessions">
+        <TimelineItem :key="index" :color="item.TYPE?'green':'blue'">
+          <p class="time">
+            <Time :time="getTime(item.CREATETIME)" />
+          </p>
+          <p class="content">{{(item.TYPE?"用户":"客服")+"-"+item.NAME+"："+item.TEXT}}</p>
+        </TimelineItem>
+      </template>
+
     </Timeline>
-    </Card>
+    <Divider v-if="!sessions.length">无留言信息</Divider>
+  </div>
 </template>
 
 <script>
@@ -34,10 +20,31 @@ export default {
   name: "UserMessage",
   props: {
     userMessage: Object // 基本信息
+  },
+  data() {
+    return {
+      sessions: []
+    };
+  },
+  mounted() {
+    if (this.userMessage.talkdata) {
+      this.sessions = this.userMessage.talkdata.reverse();
+    }
+  },
+  methods: {
+    getTime(time) {
+      return new Date(time).getTime();
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-
+.time {
+  font-size: 14px;
+  font-weight: bold;
+}
+.content {
+  padding-left: 5px;
+}
 </style>

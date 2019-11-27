@@ -44,5 +44,13 @@ Vue.prototype.$api = {
   // 删除审核图片
   deleteFile(bussid, ftppath, id) {
     return axios.post("/netbus/buss/deleteFile", { bussid, ftppath, id });
+  },
+  // 获取户号详细信息
+  getMisInfo(hhInfo) {
+    return axios.post("/netbus/buss/getMisInfo", Qs.stringify(hhInfo));
+  },
+  // 获取聊天记录
+  getSessions(id) {
+    return axios.post("/netbus/buss/getSessions", { id });
   }
 };

@@ -22,8 +22,6 @@ export default {
   },
   data() {
     return {
-      formItem: undefined,
-      // 表单列表
       formFields: undefined
     };
   },
@@ -50,8 +48,14 @@ export default {
           break;
       }
     });
-    this.formItem = formItem;
+    this.$store.commit("updateBusinessDetailFormItem", formItem);
     this.formFields = this.forminfo.items;
+  },
+  computed: {
+    // 从缓存里面取数据
+    formItem() {
+      return this.$store.state.businessDetail.formItem;
+    }
   }
 };
 </script>

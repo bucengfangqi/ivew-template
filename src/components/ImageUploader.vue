@@ -19,7 +19,9 @@
       </div>
     </Upload>
     <Modal title="图片详情" v-model="visible">
-      <img :src="'/netbus/buss/photo?name=' + imgName" v-if="visible" style="width: 100%">
+      <div style="text-align:center">
+        <img :src="'/netbus/buss/photo?name=' + imgName" v-if="visible" style="max-width: 100%;max-height:500px">
+      </div>
     </Modal>
     <Modal title="删除图片" v-model="delImage" @on-ok="sureDel(prepareRemoveFile)">
       <p>确认删除此图片？</p>
@@ -58,11 +60,18 @@ export default {
     },
     sureDel(file) {
       const fileList = this.$refs.upload.fileList;
-      this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
-      this.$api.deleteFile(file.bussid, file.ftppath, file.id).then(() => {
-        this.$Notice.success({
-          title: "已删除"
-        });
+
+      this.$api.deleteFile(file.bussid, file.ftppath, file.id).then(result => {
+        if (result.status === "1") {
+          this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+          this.$Notice.success({
+            title: "已删除"
+          });
+        } else {
+          this.$Notice.error({
+            title: result.message?result.message:'删除失败'
+          });
+        }
       });
     },
     handleSuccess() {

@@ -21,11 +21,17 @@ export default new Vuex.Store({
       }
     },
     businessDetail: {
+      formItem: undefined, // 表单列表
       sendMessageModal: false, // 业务留言框
       businessSaveModal: false // 业务保存框
     }
   },
-  mutations: {},
+  mutations: {
+    // 更新业务详情用户提交的数据表单
+    updateBusinessDetailFormItem(state, formItem) {
+      state.businessDetail.formItem = formItem;
+    }
+  },
   actions: {},
   modules: {}
 });

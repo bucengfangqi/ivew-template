@@ -17,8 +17,12 @@ export default new Vuex.Store({
       page: {
         pageNumber: 1,
         pageSize: 10,
-        recordCount:0,
+        recordCount: 0
       }
+    },
+    businessDetail: {
+      sendMessageModal: false, // 业务留言框
+      businessSaveModal: false // 业务保存框
     }
   },
   mutations: {},

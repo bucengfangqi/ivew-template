@@ -2,7 +2,7 @@ import Vue from "vue";
 
 import axios from "axios";
 import { LoadingBar } from "view-design";
-axios.defaults.headers.common["AccessToken"] = "EeL2TvZbSve-93Qse33Srg";
+axios.defaults.headers.common["AccessToken"] = "F7ZJsbqsQX246fZLF8T3hw";
 Vue.prototype.$http = axios;
 
 // Add a request interceptor

@@ -1,17 +1,17 @@
 <template>
   <div>
     <Timeline>
-      <template v-for="(item, index) in sessions">
-        <TimelineItem :key="index" :color="item.TYPE?'green':'blue'">
+      <template v-for="item in userMessage">
+        <TimelineItem :key="item.TEXT+item.ID" :color="item.TYPE?'green':'blue'">
           <p class="time">
             <Time :time="getTime(item.CREATETIME)" />
           </p>
-          <p class="content">{{(item.TYPE?"用户":"客服")+"-"+item.NAME+"："+item.TEXT}}</p>
+          <p class="content">{{(item.TYPE?"用户":"客服")+(item.NAME?("-"+item.NAME):'')+"："+item.TEXT}}</p>
         </TimelineItem>
       </template>
 
     </Timeline>
-    <Divider v-if="!sessions.length">无留言信息</Divider>
+    <Divider v-if="!userMessage.length">无留言信息</Divider>
   </div>
 </template>
 
@@ -19,17 +19,7 @@
 export default {
   name: "UserMessage",
   props: {
-    userMessage: Object // 基本信息
-  },
-  data() {
-    return {
-      sessions: []
-    };
-  },
-  mounted() {
-    if (this.userMessage.talkdata) {
-      this.sessions = this.userMessage.talkdata.reverse();
-    }
+    userMessage: Array // 基本信息
   },
   methods: {
     getTime(time) {

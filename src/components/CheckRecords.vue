@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-for="(item, index) in messageData">
+    <template v-for="(item, index) in checkRecords">
       <TimelineItem :key="index" color="blue">
         <p class="time">
           <Time :time="getTime(item.CREATETIME)" />
@@ -8,7 +8,7 @@
         <p class="content">{{"客服-"+item.NAME+"："+item.MESSAGE}}</p>
       </TimelineItem>
     </template>
-    <Divider v-if="!messageData.length">无审核记录</Divider>
+    <Divider v-if="!checkRecords.length">无审核记录</Divider>
   </div>
 </template>
 
@@ -16,17 +16,7 @@
 export default {
   name: "CheckRecords",
   props: {
-    checkRecords: Object // 基本信息
-  },
-  data() {
-    return {
-      messageData: []
-    };
-  },
-  mounted() {
-    if (this.checkRecords.messageData) {
-      this.messageData = this.checkRecords.messageData.reverse();
-    }
+    checkRecords: Array // 基本信息
   },
   methods: {
     getTime(time) {

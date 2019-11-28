@@ -48,8 +48,8 @@
         <Icon type="md-done-all" :size="18"></Icon>
         审核记录
       </p>
-      <CheckRecords v-if="userMessage" :checkRecords="userMessage"></CheckRecords>
-      <div v-if="!userMessage" class="spin-container">
+      <CheckRecords v-if="CheckRecords" :checkRecords="CheckRecords"></CheckRecords>
+      <div v-if="!CheckRecords" class="spin-container">
         <Spin size="large" fix></Spin>
       </div>
     </Card>
@@ -57,12 +57,14 @@
     <!-- 控制面板 -->
     <div class="control-panel">
       <Card dis-hover :bordered="false">
-        <Button type="info" style="margin-right:5px">Info</Button>
-        <Button type="success" style="margin-right:5px">Success</Button>
-        <Button type="warning" style="margin-right:5px">Warning</Button>
-        <Button type="primary">操作</Button>
+        <Button :disabled="loading" icon="md-at" @click="showModal('sendMessageModal')">业务留言</Button>
+        <Button type="primary" :disabled="loading" icon="md-done-all" @click="showModal('businessSaveModal')" style="margin-left:5px;">业务保存</Button>
       </Card>
     </div>
+    <!-- 业务留言框 -->
+    <UserMessageSend @updateSessions="updateSessions"></UserMessageSend>
+    <!-- 业务保存框 -->
+    <CheckRecordsSend @updateSessions="updateSessions"></CheckRecordsSend>
   </div>
 </template>
 <script>
@@ -72,20 +74,27 @@ import FileInfo from "@/components/FileInfo.vue";
 import UserMessage from "@/components/UserMessage.vue";
 import CheckRecords from "@/components/CheckRecords.vue";
 
+import UserMessageSend from "@/components/UserMessageSend.vue";
+import CheckRecordsSend from "@/components/CheckRecordsSend.vue";
+
 export default {
   components: {
-    BasicInfo,
-    FormInfo,
-    FileInfo,
-    UserMessage,
-    CheckRecords
+    BasicInfo, // 基本信息-组件
+    FormInfo, // 用户提交的数据-组件
+    FileInfo, // 档案信息-组件
+    UserMessage, // 用户留言-组件
+    CheckRecords, // 审核记录-组件
+    UserMessageSend, // 用户留言框-组件
+    CheckRecordsSend // 业务保存框-组件
   },
   data() {
     return {
       forminfo: undefined,
       basicInfo: undefined,
       fileInfo: undefined,
-      userMessage: undefined
+      userMessage: undefined,
+      CheckRecords: undefined,
+      loading: true
     };
   },
   mounted() {
@@ -112,7 +121,9 @@ export default {
         this.$http.spread(
           (businessList, bussOptions, dictionaries, sessions) => {
             /********************************* 基本信息逻辑 ***********************************/
-            if (businessList.content) {
+            if (businessList.content && bussOptions.items) {
+              this.loading = false;
+
               businessList.content.sourcenameMap = { null: "-" };
               businessList.content.statusMap = {};
               dictionaries.items.map(item => {
@@ -133,10 +144,13 @@ export default {
                 hh: +businessList.content.busdata[0].hh
               };
               /********************************* 会话逻辑 ***********************************/
-              this.userMessage = sessions.content;
-            }
-            /********************************* 表单逻辑 ***********************************/
-            if (bussOptions.items) {
+              this.userMessage = sessions.content.talkdata
+                ? sessions.content.talkdata.reverse()
+                : [];
+              this.CheckRecords = sessions.content.messageData
+                ? sessions.content.messageData.reverse()
+                : [];
+              /********************************* 表单逻辑 ***********************************/
               // 并发数组默认为空
               const spreadHttps = [];
               // 新建 Set
@@ -236,6 +250,23 @@ export default {
           }
         )
       );
+  },
+  methods: {
+    // 打开留言框
+    showModal(objName) {
+      this.$store.state.businessDetail[objName] = true;
+    },
+    // 更新缓存
+    updateSessions() {
+      this.$api.getSessions(this.$route.params.id).then(sessions => {
+        this.userMessage = sessions.content.talkdata
+          ? sessions.content.talkdata.reverse()
+          : [];
+        this.CheckRecords = sessions.content.messageData
+          ? sessions.content.messageData.reverse()
+          : [];
+      });
+    }
   }
 };
 </script>

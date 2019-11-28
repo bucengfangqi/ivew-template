@@ -52,5 +52,9 @@ Vue.prototype.$api = {
   // 获取聊天记录
   getSessions(id) {
     return axios.post("/netbus/buss/getSessions", { id });
+  },
+  // 给用户留言
+  bussReply(busid, text, type) {
+    return axios.post("/netbus/buss/reply", { busid, text, type });
   }
 };

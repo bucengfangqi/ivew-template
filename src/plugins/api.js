@@ -56,5 +56,27 @@ Vue.prototype.$api = {
   // 给用户留言
   bussReply(busid, text, type) {
     return axios.post("/netbus/buss/reply", { busid, text, type });
+  },
+  // 业务审核，发短信
+  sendMessage(busid, message, backstatus) {
+    return axios.post("/netbus/buss/sendMessage", {
+      isSendMessage: false,
+      pushMobile: 15088672074,
+      busid,
+      message,
+      backstatus
+    });
+  },
+  // 业务保存
+  bussSave(formInfo) {
+    return axios.post("/netbus/buss/save", formInfo);
+  },
+  // 初审通过
+  bussUpdate(formInfo) {
+    return axios.post("/netbus/buss/update", formInfo);
+  },
+  // 业务退回，人工结束，直接更新业务状态
+  updateStatus(id, status) {
+    return axios.post("/netbus/buss/updateStatus", { id, status });
   }
 };

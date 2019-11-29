@@ -51,17 +51,32 @@
 <script>
 export default {
   name: "BasicInfo",
-  props: {
-    basicInfo: Object // 基本信息
-  },
-  data() {
-    return {
-      busdata: this.basicInfo.busdata[0], // 业务详情
-      sourcenameMap: this.basicInfo.sourcenameMap, // 业务通道字典
-      statusMap: this.basicInfo.statusMap, // 业务状态字典
-      sysAreas: this.basicInfo.sysAreas, // 业务区域列表
-      busMenus: this.basicInfo.busMenus // 业务分类列表
-    };
+  // 从缓存里面取数据
+  computed: {
+    // 基本信息
+    basicInfo() {
+      return this.$store.state.businessDetail.basicInfo;
+    },
+    // 业务详情
+    busdata() {
+      return this.basicInfo.busdata[0];
+    },
+    // 业务通道字典
+    sourcenameMap() {
+      return this.basicInfo.sourcenameMap;
+    },
+    // 业务状态字典
+    statusMap() {
+      return this.basicInfo.statusMap;
+    },
+    // 业务区域列表
+    sysAreas() {
+      return this.basicInfo.sysAreas;
+    },
+    // 业务分类列表
+    busMenus() {
+      return this.basicInfo.busMenus;
+    }
   }
 };
 </script>

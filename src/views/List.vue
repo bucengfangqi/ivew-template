@@ -184,7 +184,10 @@ export default {
     go(row) {
       this.$router.push({
         path: `/list/${row.id}`,
-        query: { templateid: row.templateid }
+        query: {
+          templateid: row.templateid,
+          status: row.status
+        }
       });
     }
   },

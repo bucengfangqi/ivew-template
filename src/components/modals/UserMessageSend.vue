@@ -1,5 +1,9 @@
 <template>
-  <Modal v-model="businessDetail.sendMessageModal" title="业务留言" @on-cancel="cancel">
+  <Modal v-model="businessDetail.sendMessageModal" @on-cancel="cancel">
+    <p slot="header" style="color:#444;">
+      <Icon type="md-at" :size="18"></Icon>
+      业务留言
+    </p>
     <Input v-model="message" type="textarea" :rows="8" maxlength="200" show-word-limit placeholder="请输入" />
     <p slot="footer">
       <Button type="text" @click="cancel">取消</Button>
@@ -27,7 +31,7 @@ export default {
       });
     },
     cancel() {
-      this.$store.state.businessDetail.sendMessageModal = false;
+      this.businessDetail.sendMessageModal = false;
       this.message = "";
     }
   },

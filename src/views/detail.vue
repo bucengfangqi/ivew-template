@@ -4,7 +4,7 @@
       <p slot="title">
         业务基本信息
       </p>
-      <BasicInfo v-if="basicInfo" :basicInfo="basicInfo"></BasicInfo>
+      <BasicInfo v-if="basicInfo"></BasicInfo>
       <div v-if="!basicInfo" class="spin-container">
         <Spin size="large" fix></Spin>
       </div>
@@ -35,7 +35,7 @@
     <Card dis-hover :bordered="false" style="margin:30px" :padding="30">
       <p slot="title" style="color:#444">
         <Icon type="md-at" :size="18"></Icon>
-        用户留言
+        业务留言
       </p>
       <UserMessage v-if="userMessage" :userMessage="userMessage"></UserMessage>
       <div v-if="!userMessage" class="spin-container">
@@ -56,15 +56,24 @@
 
     <!-- 控制面板 -->
     <div class="control-panel">
-      <Card dis-hover :bordered="false">
-        <Button :disabled="loading" icon="md-at" @click="showModal('sendMessageModal')">业务留言</Button>
-        <Button type="primary" :disabled="loading" icon="md-done-all" @click="showModal('businessSaveModal')" style="margin-left:5px;">业务保存</Button>
+      <Card dis-hover :bordered="false" :padding="10">
+        <Button :disabled="loading||status===7||status===4" icon="md-at" class="userMessage" @click="showModal('sendMessageModal')">业务留言</Button>
+        <Button :disabled="loading||status===3||status===7||status===4" icon="md-done-all" class="businessSave" @click="showModal('businessSaveModal')">业务保存</Button>
+        <Button :disabled="loading||status===7||status===4" icon="md-pricetag" type="error" @click="showModal('businessEnd')">人工结束</Button>
+        <Button :disabled="loading||status!==1" icon="md-checkmark-circle" type="success" @click="showModal('businessPass')">初审通过</Button>
+        <Button :disabled="loading||status===3||status===7||status===4" icon="md-close-circle" type="warning" @click="showModal('businessRefuse')">业务退回</Button>
       </Card>
     </div>
     <!-- 业务留言框 -->
     <UserMessageSend @updateSessions="updateSessions"></UserMessageSend>
     <!-- 业务保存框 -->
-    <CheckRecordsSend @updateSessions="updateSessions"></CheckRecordsSend>
+    <CheckRecordsSend @updateSessions="updateSessions" :editDictionaries="editDictionaries"></CheckRecordsSend>
+    <!-- 业务人工结束框 -->
+    <BusinessEnd @updateSessions="updateSessions" :editDictionaries="editDictionaries"></BusinessEnd>
+    <!-- 业务初审通过框 -->
+    <BusinessPass @updateSessions="updateSessions" :editDictionaries="editDictionaries"></BusinessPass>
+    <!-- 业务打回框 -->
+    <BusinessRefuse @updateSessions="updateSessions" :editDictionaries="editDictionaries"></BusinessRefuse>
   </div>
 </template>
 <script>
@@ -74,8 +83,11 @@ import FileInfo from "@/components/FileInfo.vue";
 import UserMessage from "@/components/UserMessage.vue";
 import CheckRecords from "@/components/CheckRecords.vue";
 
-import UserMessageSend from "@/components/UserMessageSend.vue";
-import CheckRecordsSend from "@/components/CheckRecordsSend.vue";
+import UserMessageSend from "@/components/modals/UserMessageSend.vue";
+import CheckRecordsSend from "@/components/modals/CheckRecordsSend.vue";
+import BusinessEnd from "@/components/modals/BusinessEnd.vue";
+import BusinessPass from "@/components/modals/BusinessPass.vue";
+import BusinessRefuse from "@/components/modals/BusinessRefuse.vue";
 
 export default {
   components: {
@@ -85,15 +97,18 @@ export default {
     UserMessage, // 用户留言-组件
     CheckRecords, // 审核记录-组件
     UserMessageSend, // 用户留言框-组件
-    CheckRecordsSend // 业务保存框-组件
+    CheckRecordsSend, // 业务保存框-组件
+    BusinessEnd, // 业务人工结束框-组件
+    BusinessPass, // 业务初审通过框-组件
+    BusinessRefuse // 业务打回框-组件
   },
   data() {
     return {
-      forminfo: undefined,
-      basicInfo: undefined,
-      fileInfo: undefined,
-      userMessage: undefined,
-      CheckRecords: undefined,
+      forminfo: undefined, // 用户提交的数据
+      fileInfo: undefined, // 档案信息
+      userMessage: undefined, // 用户留言
+      CheckRecords: undefined, // 审核记录
+      editDictionaries: [], // 快捷回复字典
       loading: true
     };
   },
@@ -103,6 +118,7 @@ export default {
         // 获取业务详情信息
         this.$api.getBussList({
           id: this.$route.params.id,
+          status: this.$route.query.status,
           date: ["", ""],
           page: {
             pageNumber: 1,
@@ -113,7 +129,7 @@ export default {
         // 获取模板信息
         this.$api.getBussOptions(this.$route.query.templateid),
         // 获取字典
-        this.$api.getDictionaries(["SOURCE_NAME", "BUS_STATUS"]),
+        this.$api.getDictionaries(["SOURCE_NAME", "BUS_STATUS", "EDITDIC"]),
         // 获取会话信息
         this.$api.getSessions(this.$route.params.id)
       ])
@@ -131,12 +147,17 @@ export default {
                 if (item.classcode === "SOURCE_NAME") {
                   businessList.content.sourcenameMap[item.itemname] =
                     item.itemvalue;
-                } else {
+                } else if (item.classcode === "BUS_STATUS") {
                   businessList.content.statusMap[item.itemname] =
                     item.itemvalue;
+                } else if (item.classcode === "EDITDIC") {
+                  this.editDictionaries.push(item);
                 }
               });
-              this.basicInfo = businessList.content;
+              this.$store.commit(
+                "updateBusinessDetailBasicInfo",
+                businessList.content
+              );
 
               /********************************* 档案信息逻辑 ***********************************/
               this.fileInfo = {
@@ -254,7 +275,7 @@ export default {
   methods: {
     // 打开留言框
     showModal(objName) {
-      this.$store.state.businessDetail[objName] = true;
+      this.$store.commit("updateBusinessDetailModal", objName);
     },
     // 更新缓存
     updateSessions() {
@@ -267,6 +288,16 @@ export default {
           : [];
       });
     }
+  },
+  computed: {
+    // 从缓存里面取数据
+    basicInfo() {
+      return this.$store.state.businessDetail.basicInfo;
+    },
+    // 业务状态
+    status() {
+      return this.basicInfo.busdata[0].status;
+    }
   }
 };
 </script>
@@ -277,6 +308,38 @@ export default {
   bottom: 0;
   text-align: right;
   box-shadow: 0px -3px 6px 0 rgba(0, 0, 0, 0.1);
+
+  button {
+    margin: 5px;
+
+    i {
+      font-size: 16px;
+    }
+  }
+  .userMessage {
+    background: #444;
+    color: #fff;
+    border-color: #444;
+
+    &:focus {
+      box-shadow: 0 0 0 2px rgba(#444, 0.2);
+    }
+  }
+  .businessSave {
+    background: #8c0776;
+    color: #fff;
+    border-color: #8c0776;
+
+    &:focus {
+      box-shadow: 0 0 0 2px rgba(#8c0776, 0.2);
+    }
+  }
+  .userMessage[disabled],
+  .businessSave[disabled] {
+    color: #c5c8ce;
+    background-color: #f7f7f7;
+    border-color: #dcdee2;
+  }
 }
 .spin-container {
   height: 100px;

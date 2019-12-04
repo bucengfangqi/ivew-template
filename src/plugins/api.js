@@ -4,7 +4,6 @@ import Qs from "qs";
 Vue.prototype.$api = {
   // 查询业务列表
   getBussList(searchCondition) {
-    // return axios.post("/netbus/buss/list", Qs.stringify(searchCondition));
     return axios.post("/netbus/buss/list", {
       busData: {
         id: searchCondition.id ? searchCondition.id : undefined, // 业务ID

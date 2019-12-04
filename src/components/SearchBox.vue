@@ -50,7 +50,7 @@ export default {
     loading: Boolean, // 加载状态
     dictionaries: Array, // 来源&业务状态，字典
     sysAreas: Array, // 业务区域列表
-    busMenus: Array, // 业务区域列表
+    busMenus: Array, // 业务分类列表
   },
   data() {
     return {

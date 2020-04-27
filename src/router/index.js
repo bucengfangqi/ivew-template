@@ -14,7 +14,171 @@ const routes = [
     path: "/list/:id",
     name: "detail",
     component: () => import("../views/detail.vue")
-  },
+	},
+	{
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	},
+	{
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	},
+	{
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	},
+	{
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	},
+	{
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	},
+	{
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	},
+	{
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	},
+	{
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	},
+	{
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	},
+	{
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	},
+	{
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	},
+	{
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	}, {
+		path: "/list/:id",
+		name: "detail",
+		component: () => import("../views/detail.vue")
+	},
   {
     path: "/",
     redirect: "/list"
